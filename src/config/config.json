@@ -1,0 +1,44 @@
+{
+  "development": {
+    "username": "viet003",
+    "password": "B80W02giA1mEMFb07xDnhQ",
+    "database": "iot-db",
+    "host": "node-db-4277.j77.aws-ap-southeast-1.cockroachlabs.cloud",
+    "port": 26257,
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
+  },
+  "test": {
+    "username": "viet003",
+    "password": "B80W02giA1mEMFb07xDnhQ",
+    "database": "iot-db",
+    "host": "node-db-4277.j77.aws-ap-southeast-1.cockroachlabs.cloud",
+    "port": 26257,
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
+  },
+  "production": {
+    "username": "viet003",
+    "password": "B80W02giA1mEMFb07xDnhQ",
+    "database": "iot-db",
+    "host": "node-db-4277.j77.aws-ap-southeast-1.cockroachlabs.cloud",
+    "port": 26257,
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
+  }
+}

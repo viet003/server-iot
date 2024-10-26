@@ -1,9 +1,10 @@
-import authRouter from "./auth"
+import Route from "./route"
+
 
 const initRoutes = (app) => {
 
-    app.use('/api/auth', authRouter)
-    
+    app.use('/api', Route)
+
     return app.use('/', (req, res) => {
         // console.log("Server onl")
         res.json("Sever onl...")

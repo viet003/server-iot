@@ -1,10 +1,10 @@
 import express from "express";
-import dotenv from "dotenv";
+require('dotenv').config();
 import cors from "cors";
-import initRoutes from "./src/routes";
-import { WebSocketServer } from "ws";  
+import initRoutes from "./src/routes"
+import ConnectDB from "./src/config/connectDB"
 
-dotenv.config();
+
 const app = express();
 
 app.use(cors({
@@ -16,29 +16,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 initRoutes(app);
+ConnectDB();
 
 const port = process.env.PORT || 2025;
 const server = app.listen(port, () => {
     console.log(`Server is running on port ${server.address().port}.....`);
 });
 
-// Tạo WebSocket server sử dụng cùng HTTP server
-const wss = new WebSocketServer({ server });
-
-// Xử lý các kết nối WebSocket
-wss.on('connection', function connection(ws) {
-    console.log('A new WebSocket client connected!');
-
-    // Xử lý khi nhận được tin nhắn từ client
-    ws.on('message', function incoming(message) {
-        console.log('Received:', message);
-
-        // Gửi phản hồi lại cho client
-        ws.send('Message received: ' + message);
-    });
-
-    // Xử lý khi client ngắt kết nối
-    ws.on('close', () => {
-        console.log('WebSocket client disconnected');
-    });
-});
