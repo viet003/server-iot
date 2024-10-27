@@ -1,16 +1,39 @@
+import db from "../models";
 
-// export const createCardService = ({ id, type }) => new Promise(async (resolve, reject) => {
-//     try {
-//         const res = await db.collection('Cards').doc(id.toString()).set({
-//             id: id,
-//             type: type
-//         });
+// tạo comment
+export const createCardService = async ({ id, type }) => {
+    try {
+        const response = await db.Card.create({
+            id,
+            type,
+            createdAt: new Date(),  // Đảm bảo có giá trị cho createdAt
+            updatedAt: new Date()    // Đảm bảo có giá trị cho updatedAt
+        });
 
-//         resolve({
-//             err: res ? 0 : 2,
-//             msg: res ? 'Tạo thành công!' : 'Tạo không thành công!'
-//         })
-//     } catch (error) {
-//         reject(error)
-//     }
-// })
+        return {
+            err: response ? 0 : 2,
+            msg: response ? 'Thành công!' : 'Không thành công.'
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+// xóa comment
+export const deleteCardService = async ({ id }) => {
+    try {
+        const response = await db.Card.destroy({
+            where: {
+                id
+            }
+        })
+        return {
+            err: response ? 0 : 2,
+            msg: response ? 'Thành công!' : 'Không thành công.'
+        }
+    } catch (error) {
+        throw (error)
+    }
+}

@@ -27,7 +27,7 @@ export const login = async (req, res) => {
         if (!email || !password) {
             return res.status(400).json({
                 err: 1,
-                msg: "Missing input data!"
+                msg: "Thiếu dữ liệu đầu vào!"
             })
         }
         const rs = await authService.loginService(req.body)

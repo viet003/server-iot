@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('users', {
       id: {
         type: Sequelize.BIGINT,
         primaryKey: true,
@@ -14,6 +14,10 @@ module.exports = {
         allowNull: false,
       },
       password: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      username: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -37,6 +41,6 @@ module.exports = {
     // await queryInterface.addIndex('adAccounts', ['id']);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('users');
   }
 };
