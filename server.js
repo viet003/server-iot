@@ -32,41 +32,44 @@ wss.on('connection', (ws) => {
     // Thêm kết nối mới vào tập hợp clients
     clients.add(ws);
     console.log('Client connected');
-    // // Gửi JSON message
-    // ws.send(JSON.stringify({
-    //     sender: "react",
-    //     message: 'Welcome to the WebSocket server!',
-    // }));
 
     // Lắng nghe tin nhắn từ client
     ws.on('message', (message) => {
         try {
             const _message = JSON.parse(message)
+            console.log(_message)
             switch (_message.sender) {
-                case 'react':
-                    console.log("Received message from react");
-                    if(_message.type === "get_history") {
-                        wsControllers.getHistoryController(clients,ws);
+                case "react":
+                    switch (_message.type) {
+                        case "get_data":
+                            wsControllers.getDataController(clients, ws);
+                            break;
+                        case "cmd":
+                            wsControllers.sendToOther(clients, ws, _message);
+                            break;
+                        default:
+                            break;
                     }
                     break;
-                case 'esp8266':
-                    console.log("Received message from esp8266");
-                    if(_message.type && _message.type === "check_last") {
-                        
+                case "esp8266":
+                    switch (_message.type) {
+                        case "cmd":
+                            wsControllers.sendToOther(clients, ws, _message);
+                            break;
+                        case "check":
+                            wsControllers.checkLastController(clients, ws, _message?.body?.id);
+                            break;
+                        default:
+                            break;
                     }
                     break;
                 default:
                     console.log("Received message from an unknown sender");
+                    break;
             }
         } catch (error) {
             console.log(error)
         }
-        // // Phát tin nhắn đến tất cả client
-        // clients.forEach((client) => {
-        //     if (client !== ws && client.readyState === WebSocket.OPEN) {
-        //         client.send(JSON.stringify({ broadcast: `Broadcast: ${message}` }));
-        //     }
-        // });
     });
 
     // Khi client đóng kết nối

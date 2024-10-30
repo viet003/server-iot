@@ -9,15 +9,16 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
-      cardId: {
+      card_id: { // Đổi tên từ cardId thành card_id để phù hợp với sơ đồ
         type: Sequelize.STRING,
         allowNull: false,
       },
       time: {
         type: Sequelize.DATE,
+        allowNull: false, // Thêm để đảm bảo rằng time không được phép NULL
       },
       status: {
-        type: Sequelize.BIGINT,
+        type: Sequelize.INTEGER,
         allowNull: false,        
       },
       createdAt: {

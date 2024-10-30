@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
   class Bill extends Model {
     static associate(models) {
       // Mỗi Bill thuộc về một Card
-      Bill.belongsTo(models.Card, { foreignKey: 'cardId' });
+      Bill.belongsTo(models.Card, { foreignKey: 'card_id' });
     }
   }
 
@@ -16,9 +16,9 @@ module.exports = (sequelize) => {
       autoIncrement: true,
       allowNull: false,
     },
-    cardId: {
-      type: DataTypes.BIGINT,
-      allowNull: true,
+    card_id: { // Sửa thành card_id để phù hợp với bảng
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     total: {
       type: DataTypes.INTEGER,

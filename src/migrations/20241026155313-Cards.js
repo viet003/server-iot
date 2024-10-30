@@ -9,7 +9,8 @@ module.exports = {
         allowNull: false,
       },
       type: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER, // Điều chỉnh thành BIGINT theo sơ đồ
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

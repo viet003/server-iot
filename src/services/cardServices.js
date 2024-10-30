@@ -1,3 +1,4 @@
+import { where } from "sequelize-cockroachdb";
 import db from "../models";
 
 // tạo comment
@@ -37,3 +38,16 @@ export const deleteCardService = async ({ id }) => {
         throw (error)
     }
 }
+
+// kiểm tra thẻ
+export const checkCardService = async (id) => {
+    try {
+        const response = await db.Card.findOne({
+            where: { id } 
+        });
+
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};

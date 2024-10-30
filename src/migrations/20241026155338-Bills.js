@@ -9,7 +9,7 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
-      cardId: {
+      card_id: { // Đổi tên từ cardId thành card_id để phù hợp với sơ đồ
         type: Sequelize.STRING,
         allowNull: false,        
       },

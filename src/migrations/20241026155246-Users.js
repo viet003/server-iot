@@ -12,21 +12,26 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true, // Đảm bảo email là duy nhất
       },
-      password: {
+      pass_word: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      username: {
+      user_name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      cardId: {
+      card_id: {
         type: Sequelize.STRING,
+        allowNull: false,
+      },
+      vehicle_type: {
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       type: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       createdAt: {
@@ -38,7 +43,6 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    // await queryInterface.addIndex('adAccounts', ['id']);
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('users');

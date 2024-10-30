@@ -18,9 +18,13 @@ export const getAllHistoriesService = () => new Promise(async (resolve, reject) 
         });
 
         resolve({
-            err: response.length ? 0 : 2,
-            msg: response.length ? 'Lấy dữ liệu thành công!' : 'Không có dữ liệu trong bảng History.',
-            data: response
+            sender: "react",
+            type: "get_data",
+            body: {
+                err: response.length ? 0 : 2,
+                msg: response.length ? 'Lấy dữ liệu thành công!' : 'Không có dữ liệu trong bảng History.',
+                data: response
+            }
         });
     } catch (error) {
         reject({
@@ -30,3 +34,40 @@ export const getAllHistoriesService = () => new Promise(async (resolve, reject) 
         });
     }
 });
+
+// Tạo một bản ghi mới trong bảng History
+export const createHistory = async (cardId, status) => {
+    try {
+        const response = await db.History.create({
+            cardId: cardId,
+            status: status,
+            time: new Date() // Lấy thời gian hiện tại để lưu vào cột `time`
+        });
+
+        return response;
+    } catch (error) {
+        console.error("Lỗi tạo lịch sử:", error);
+        throw(error)
+    }
+};
+
+
+// Lấy bản ghi gần nhất theo cardId từ bảng History
+export const getLatestHistoryWithCardType = async (cardId) => {
+    try {
+        const response = await db.History.findOne({
+            where: { cardId },
+            order: [['time', 'DESC']], // Sắp xếp theo time giảm dần để lấy bản ghi mới nhất
+            include: [
+                {
+                    model: db.Card,
+                    attributes: ['type'], // Chỉ lấy trường type từ bảng Card
+                }
+            ]
+        });
+
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};

@@ -4,8 +4,8 @@ const { Model, DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   class User extends Model {
     static associate(models) {
-      // Định nghĩa các quan hệ nếu có, ví dụ: User.belongsTo(models.Card, { foreignKey: 'cardId' });
-      User.belongsTo(models.Card, { foreignKey: 'cardId' });
+      // Mỗi User thuộc về một Card
+      User.belongsTo(models.Card, { foreignKey: 'card_id' });
     }
   }
 
@@ -19,21 +19,26 @@ module.exports = (sequelize) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true, 
     },
-    password: {
+    pass_word: { 
       type: DataTypes.STRING,
       allowNull: false,
     },
-    username:{
+    user_name: { 
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
-    cardId: {
+    card_id: { 
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    vehicle_type: { 
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     type: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     createdAt: {
@@ -47,8 +52,8 @@ module.exports = (sequelize) => {
   }, {
     sequelize,
     modelName: 'User',
-    tableName: 'users',  // Khớp với tên bảng trong migration
-    timestamps: true, // Để Sequelize tự động quản lý createdAt và updatedAt
+    tableName: 'users', 
+    timestamps: true, 
   });
 
   return User;

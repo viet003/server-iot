@@ -7,28 +7,31 @@ module.exports = {
     await queryInterface.bulkInsert('users', [
       {
         email: 'user1@example.com',
-        password: 'password123',  // Lưu ý: mật khẩu nên được mã hóa trong thực tế
-        username: 'user1',
-        cardId: 'HDKZWQEF',
-        type: 'Xe máy',
+        pass_word: 'password123',  // Lưu ý: mật khẩu nên được mã hóa trong thực tế
+        user_name: 'user1',
+        type: 0,
+        card_id: 'HDKZWQEF',
+        vehicle_type: 0,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         email: 'user2@example.com',
-        password: 'password123',
-        username: 'user2',
-        cardId: 'FGJHFLHJ',
-        type: 'Xe máy',
+        pass_word: 'password123',
+        user_name: 'user2',
+        type: 0,
+        card_id: 'FGJHFLHJ',
+        vehicle_type: 0,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         email: 'user3@example.com',
-        password: 'password123',
-        username: 'user3',
-        cardId: 'UGHDSDFD',
-        type: 'Xe máy',
+        pass_word: 'password123',
+        user_name: 'user3',
+        type: 0,
+        card_id: 'UGHDSDFD',
+        vehicle_type: 0,
         createdAt: new Date(),
         updatedAt: new Date()
       }

@@ -2,11 +2,11 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        // Thêm ràng buộc ngoại tuyến giữa 'Users' và 'cards'
+        // Thêm ràng buộc ngoại tuyến giữa 'users' và 'cards'
         await queryInterface.addConstraint('users', {
-            fields: ['cardId'],
+            fields: ['card_id'], // Sửa thành card_id
             type: 'foreign key',
-            name: 'fk_user_cardId', // Tên constraint phải là duy nhất
+            name: 'fk_user_card_id', // Tên constraint phải là duy nhất
             references: {
                 table: 'cards',
                 field: 'id'
@@ -15,11 +15,11 @@ module.exports = {
             onUpdate: 'CASCADE'
         });
 
-        // Thêm ràng buộc ngoại tuyến giữa 'Bills' và 'cards'
+        // Thêm ràng buộc ngoại tuyến giữa 'bills' và 'cards'
         await queryInterface.addConstraint('bills', {
-            fields: ['cardId'],
+            fields: ['card_id'], // Sửa thành card_id
             type: 'foreign key',
-            name: 'fk_bill_cardId', // Tên constraint phải là duy nhất
+            name: 'fk_bill_card_id', // Tên constraint phải là duy nhất
             references: {
                 table: 'cards',
                 field: 'id'
@@ -28,11 +28,11 @@ module.exports = {
             onUpdate: 'CASCADE'
         });
 
-        // Thêm ràng buộc ngoại tuyến giữa 'Histories' và 'cards'
+        // Thêm ràng buộc ngoại tuyến giữa 'histories' và 'cards'
         await queryInterface.addConstraint('histories', {
-            fields: ['cardId'],
+            fields: ['card_id'], // Sửa thành card_id
             type: 'foreign key',
-            name: 'fk_history_cardId', // Tên constraint phải là duy nhất
+            name: 'fk_history_card_id', // Tên constraint phải là duy nhất
             references: {
                 table: 'cards',
                 field: 'id'
@@ -43,13 +43,13 @@ module.exports = {
     },
 
     async down(queryInterface, Sequelize) {
-        // Xóa ràng buộc ngoại tuyến giữa 'Users' và 'cards'
-        await queryInterface.removeConstraint('users', 'fk_user_cardId');
+        // Xóa ràng buộc ngoại tuyến giữa 'users' và 'cards'
+        await queryInterface.removeConstraint('users', 'fk_user_card_id');
 
-        // Xóa ràng buộc ngoại tuyến giữa 'Bills' và 'cards'
-        await queryInterface.removeConstraint('bills', 'fk_bill_cardId');
+        // Xóa ràng buộc ngoại tuyến giữa 'bills' và 'cards'
+        await queryInterface.removeConstraint('bills', 'fk_bill_card_id');
 
-        // Xóa ràng buộc ngoại tuyến giữa 'Histories' và 'cards'
-        await queryInterface.removeConstraint('histories', 'fk_history_cardId');
+        // Xóa ràng buộc ngoại tuyến giữa 'histories' và 'cards'
+        await queryInterface.removeConstraint('histories', 'fk_history_card_id');
     }
 };

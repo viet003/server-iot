@@ -6,21 +6,21 @@ module.exports = {
     // Thêm dữ liệu mẫu vào bảng `histories`
     await queryInterface.bulkInsert('histories', [
       {
-        cardId: "HDKZWQEF",
+        card_id: "HDKZWQEF", 
         time: new Date('2024-10-01T10:00:00Z'),
         status: 0,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        cardId: "HDKZWQEF",
+        card_id: "HDKZWQEF",
         time: new Date('2024-10-02T12:00:00Z'),
         status: 1,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        cardId: "HDKZWQEF",
+        card_id: "HDKZWQEF",
         time: new Date('2024-10-03T14:00:00Z'),
         status: 0,
         createdAt: new Date(),

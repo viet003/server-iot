@@ -5,11 +5,11 @@ module.exports = (sequelize) => {
   class Card extends Model {
     static associate(models) {
       // Một Card có thể có nhiều Users
-      Card.hasMany(models.User, { foreignKey: 'cardId' });
+      Card.hasMany(models.User, { foreignKey: 'card_id' });
       // Một Card có thể có nhiều Bills
-      Card.hasMany(models.Bill, { foreignKey: 'cardId' });
+      Card.hasMany(models.Bill, { foreignKey: 'card_id' });
       // Một Card có thể có nhiều Histories
-      Card.hasMany(models.History, { foreignKey: 'cardId' });
+      Card.hasMany(models.History, { foreignKey: 'card_id' });
     }
   }
 
@@ -20,8 +20,8 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     type: {
-      type: DataTypes.INTEGER,
-      allowNull: true, // Dựa vào migration, trường này có thể để null
+      type: DataTypes.INTEGER,  
+      allowNull: false, 
     },
     createdAt: {
       type: DataTypes.DATE,

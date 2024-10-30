@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
   class History extends Model {
     static associate(models) {
       // Mỗi History thuộc về một Card
-      History.belongsTo(models.Card, { foreignKey: 'cardId' });
+      History.belongsTo(models.Card, { foreignKey: 'card_id' });
     }
   }
 
@@ -16,16 +16,16 @@ module.exports = (sequelize) => {
       autoIncrement: true,
       allowNull: false,
     },
-    cardId: {
-      type: DataTypes.BIGINT,
-      allowNull: true,
+    card_id: { 
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     time: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: false,
     },
     status: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     createdAt: {
@@ -39,7 +39,7 @@ module.exports = (sequelize) => {
   }, {
     sequelize,
     modelName: 'History',
-    tableName: 'histories',
+    tableName: 'histories', // Khớp với tên bảng trong migration
     timestamps: true,
   });
 
