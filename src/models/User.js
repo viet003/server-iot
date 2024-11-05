@@ -35,7 +35,7 @@ module.exports = (sequelize) => {
     },
     vehicle_type: { 
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     type: {
       type: DataTypes.INTEGER,

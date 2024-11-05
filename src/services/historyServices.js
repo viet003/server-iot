@@ -10,7 +10,7 @@ export const getAllHistoriesService = () => new Promise(async (resolve, reject) 
                     include: [
                         {
                             model: db.User,
-                            attributes: ['username']
+                            attributes: ['user_name']
                         }
                     ]
                 }

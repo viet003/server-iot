@@ -43,7 +43,7 @@ export const deleteCardService = async ({ id }) => {
 export const checkCardService = async (id) => {
     try {
         const response = await db.Card.findOne({
-            where: { id } 
+            where: { id }
         });
 
         return response;
@@ -51,3 +51,24 @@ export const checkCardService = async (id) => {
         throw error;
     }
 };
+
+export const getAllCardsService = () =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const response = await db.Card.findAll({
+                raw: true, // Trả về dữ liệu dưới dạng object đơn giản
+            });
+
+            resolve({
+                err: response.length ? 0 : 1,
+                msg: response.length ? 'Lấy dữ liệu thành công!' : 'Không có dữ liệu trong bảng cards.',
+                data: response,
+            });
+        } catch (error) {
+            reject({
+                err: 1,
+                msg: 'Lỗi khi lấy dữ liệu từ bảng cards!',
+                error: error.message,
+            });
+        }
+    });

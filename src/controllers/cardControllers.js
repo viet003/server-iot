@@ -37,3 +37,14 @@ export const deleteCardController = async (req, res) => {
         return res.status(500).json(error)
     }
 }
+
+// lấy thẻ
+export const getAllCardController = async (req, res) => {
+    try {
+        const rs = await cardService.getAllCardsService(req.body)
+        return res.status(200).json(rs)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(error)
+    }
+}
