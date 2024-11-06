@@ -4,12 +4,12 @@ const { Model, DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   class Card extends Model {
     static associate(models) {
-      // Một Card có thể có nhiều Users
-      Card.hasMany(models.User, { foreignKey: 'card_id' });
-      // Một Card có thể có nhiều Bills
-      Card.hasMany(models.Bill, { foreignKey: 'card_id' });
-      // Một Card có thể có nhiều Histories
-      Card.hasMany(models.History, { foreignKey: 'card_id' });
+      // One Card can have many Users
+      Card.hasMany(models.User, { foreignKey: 'card_id', as: 'users' });
+      // One Card can have many Bills
+      Card.hasMany(models.Bill, { foreignKey: 'card_id', as: 'bills' });
+      // One Card can have many Histories
+      Card.hasMany(models.History, { foreignKey: 'card_id', as: 'histories' });
     }
   }
 
@@ -34,9 +34,10 @@ module.exports = (sequelize) => {
   }, {
     sequelize,
     modelName: 'Card',
-    tableName: 'cards',  // Khớp với tên bảng trong migration
-    timestamps: true,    // Để Sequelize tự động quản lý createdAt và updatedAt
+    tableName: 'cards',  // Matches the table name in migration
+    timestamps: true,    // Sequelize will automatically manage createdAt and updatedAt
   });
 
   return Card;
 };
+

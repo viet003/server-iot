@@ -38,16 +38,23 @@ export const getUserByIdService = ({ id }) => new Promise(async (resolve, reject
 
 
 // sửa
-export const updateUserService = ({ id, user_name, vehicle_type }) =>
+export const updateUserService = ({ id, user_name, vehicle_type, type }) =>
     new Promise(async (resolve, reject) => {
         try {
             // Cập nhật bản ghi thông tin dựa trên id
-            const response = await db.User.update(
-                { user_name, vehicle_type },
-                {
-                    where: { id },
-                }
-            );
+            const response = type ?
+                await db.User.update(
+                    { user_name, vehicle_type, type },
+                    {
+                        where: { id },
+                    }
+                ) :
+                await db.User.update(
+                    { user_name, vehicle_type },
+                    {
+                        where: { id },
+                    }
+                )
 
             resolve({
                 err: response[0] ? 0 : 2,
@@ -61,3 +68,20 @@ export const updateUserService = ({ id, user_name, vehicle_type }) =>
             });
         }
     });
+
+// xóa user
+export const deleteUserService = async ({ id }) => {
+    try {
+        const response = await db.User.destroy({
+            where: {
+                id
+            }
+        })
+        return {
+            err: response ? 0 : 2,
+            msg: response ? ' Xóa thành công!' : 'Xóa không thành công.'
+        }
+    } catch (error) {
+        throw (error)
+    }
+}

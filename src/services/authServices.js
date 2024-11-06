@@ -42,6 +42,7 @@ export const loginService = ({ email, pass_word }) => new Promise(async (resolve
         resolve({
             err: 0,
             msg: 'Đăng nhập thành công!',
+            type: response.type,
             token,
         });
     } catch (error) {
@@ -66,7 +67,7 @@ export const registerService = ({ email, pass_word, user_name, card_id, vehicle_
                 where: { email },
                 defaults: {
                     email,
-                    pass_word: hash(pass_word),
+                    pass_word: pass_word ? hash(pass_word) : hash("12345678"),
                     user_name,
                     card_id,
                     vehicle_type: vehicle_type ?? null,
@@ -94,6 +95,35 @@ export const registerService = ({ email, pass_word, user_name, card_id, vehicle_
             reject({
                 err: 1,
                 msg: 'Lỗi khi đăng ký người dùng mới.',
+                error: error.message,
+            });
+        }
+    });
+
+export const changePassWordService = ({ type, pass_word, old_pass_word, id }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            switch (type) {
+                case 2:
+                    const response = await db.User.update(
+                    { pass_word: hash(pass_word) },
+                    {
+                        where: { id },
+                    }) 
+                    resolve({
+                        err: response[0] ? 0 : 2,
+                        msg: response[0] ? 'Đổi mật khẩu thành công thành công!' : 'Không tìm thấy thông tin để cập nhật.',
+                    });
+                    break;
+                default:
+
+
+                    break;
+            }
+        } catch (error) {
+            reject({
+                err: 1,
+                msg: 'Lỗi khi đổi mật khẩu.',
                 error: error.message,
             });
         }

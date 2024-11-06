@@ -9,16 +9,20 @@ const router = express.Router()
 // auth route
 router.post('/auth/login', authController.loginController)
 router.post('/auth/register', authController.registerController)
+router.post('/auth/changepass', authController.changePassWordController)
 
 // user route
 router.get('/user', userController.getAllUsersController)
 router.post('/user/id', userController.getUserByIdController)
 router.post('/user/update', userController.updateUserController)
+router.post('/user/delete', userController.deleteUserController)
 
 // card route
-router.post('/card/create', cardController.createCardController)
+router.get('/card', cardController.getAllCardController)
+router.get('/card/noac', cardController.getCardWithoutAccountController)
+router.post('/card/add', cardController.createCardController)
+router.post('/card/update', cardController.updateCardController)
 router.post('/card/delete', cardController.deleteCardController)
-router.get('/card/get', cardController.getAllCardController)
 
 
 // history route
