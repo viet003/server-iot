@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
   class User extends Model {
     static associate(models) {
       // Mỗi User thuộc về một Card
-      User.belongsTo(models.Card, { foreignKey: 'card_id' });
+      User.belongsTo(models.Card, { foreignKey: 'card_id', as : 'card' });
     }
   }
 

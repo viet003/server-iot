@@ -100,7 +100,7 @@ export const registerService = ({ email, pass_word, user_name, card_id, vehicle_
         }
     });
 
-export const changePassWordService = ({ type, pass_word, old_pass_word, id }) =>
+export const changePassWordService = ({ type, pass_word, old_pass_word, email }) =>
     new Promise(async (resolve, reject) => {
         try {
             switch (type) {
@@ -108,7 +108,7 @@ export const changePassWordService = ({ type, pass_word, old_pass_word, id }) =>
                     const response = await db.User.update(
                     { pass_word: hash(pass_word) },
                     {
-                        where: { id },
+                        where: { email },
                     }) 
                     resolve({
                         err: response[0] ? 0 : 2,

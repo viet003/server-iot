@@ -7,9 +7,11 @@ export const getAllHistoriesService = () => new Promise(async (resolve, reject) 
                 {
                     model: db.Card,
                     attributes: ['type'],
+                    as: 'card',
                     include: [
                         {
                             model: db.User,
+                            as: "users",
                             attributes: ['user_name']
                         }
                     ]

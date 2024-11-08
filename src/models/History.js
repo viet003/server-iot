@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
   class History extends Model {
     static associate(models) {
       // Mỗi History thuộc về một Card
-      History.belongsTo(models.Card, { foreignKey: 'card_id' });
+      History.belongsTo(models.Card, { foreignKey: 'card_id', as: 'card' });
     }
   }
 
