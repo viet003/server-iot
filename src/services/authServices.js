@@ -7,8 +7,22 @@ require('dotenv').config();
 export const loginService = ({ email, pass_word }) => new Promise(async (resolve, reject) => {
     try {
         const response = await db.User.findOne({
-            where: { email }, // Kiểm tra email và loại tài khoản
-            raw: true,
+            where: { email },
+            include: [
+                {
+                    model: db.Card,
+                    as: 'card',
+                    required: false,
+                    attributes: ['id'],
+                    include: [
+                        {
+                            model: db.Bill,
+                            as: 'bill',
+                            required: false
+                        }
+                    ],
+                }
+            ],
         });
 
         if (!response) {
@@ -34,6 +48,9 @@ export const loginService = ({ email, pass_word }) => new Promise(async (resolve
                 email: response.email,
                 user_name: response.user_name,
                 type: response.type,
+                card_id: response.card_id,
+                vehicle_type: response.vehicle_type,
+                bill: response.card.bill ?? 0
             },
             process.env.SECRET_KEY,
             { expiresIn: '1d' }

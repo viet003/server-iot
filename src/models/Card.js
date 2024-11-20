@@ -7,7 +7,7 @@ module.exports = (sequelize) => {
       // One Card can have many Users
       Card.hasMany(models.User, { foreignKey: 'card_id', as: 'users' });
       // One Card can have many Bills
-      Card.hasMany(models.Bill, { foreignKey: 'card_id', as: 'bills' });
+      Card.hasOne(models.Bill, { foreignKey: 'card_id', as: 'bill' });
       // One Card can have many Histories
       Card.hasMany(models.History, { foreignKey: 'card_id', as: 'histories' });
     }

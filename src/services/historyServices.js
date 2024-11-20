@@ -1,3 +1,4 @@
+import { where } from "sequelize";
 import db from "../models";
 
 export const getAllHistoriesService = () => new Promise(async (resolve, reject) => {
@@ -27,6 +28,27 @@ export const getAllHistoriesService = () => new Promise(async (resolve, reject) 
                 msg: response.length ? 'Lấy dữ liệu thành công!' : 'Không có dữ liệu trong bảng History.',
                 data: response
             }
+        });
+    } catch (error) {
+        reject({
+            err: 2,
+            msg: 'Lỗi khi lấy dữ liệu từ bảng History!',
+            error: error.message
+        });
+    }
+});
+
+// lay ra lich su theo card
+export const getAllHistorieByIdService = ({ card_id}) => new Promise(async (resolve, reject) => {
+    try {
+        const response = await db.History.findAll({
+            where: { card_id }
+        });
+
+        resolve({
+            err: response.length ? 0 : 2,
+            msg: response.length ? 'Lấy dữ liệu thành công!' : 'Không có dữ liệu trong bảng History.',
+            data: response
         });
     } catch (error) {
         reject({

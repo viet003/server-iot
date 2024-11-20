@@ -3,6 +3,7 @@ import * as authController from "../controllers/authControllers"
 import * as userController from "../controllers/userControllers"
 import * as cardController from "../controllers/cardControllers"
 import * as historyController from "../controllers/historyControllers"
+import * as billController from "../controllers/billController"
 
 const router = express.Router()
 
@@ -24,8 +25,12 @@ router.post('/card/add', cardController.createCardController)
 router.post('/card/update', cardController.updateCardController)
 router.post('/card/delete', cardController.deleteCardController)
 
+// bill route
+router.post('/bill', billController.getBillController)
+router.post('/bill/pay', billController.payBillController)
 
 // history route
 router.get('/history', historyController.getHistoryController)
+router.post('/history/id', historyController.getHistoryByIdController)
 
 export default router
