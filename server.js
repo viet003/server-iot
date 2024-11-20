@@ -1,15 +1,25 @@
 import express from "express";
-require('dotenv').config();
+import dotenv from 'dotenv';
 import cors from "cors";
-import initRoutes from "./src/routes"
-import ConnectDB from "./src/config/connectDB"
-import * as wsControllers from "./src/controllers/wsControllers"
+import initRoutes from "./src/routes";
+import ConnectDB from "./src/config/connectDB";
+import * as wsControllers from "./src/controllers/wsControllers";
+var admin = require("firebase-admin");
 
+// Firebase Admin SDK Initialization
+dotenv.config();
+
+var serviceAccount = require("./iot-messing-firebase-adminsdk-gzx1d-bfa7c735b7.json");
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
+
+// WebSocket Setup
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 8080 });
-const clients = new Set(); // Tập hợp để lưu các kết nối
+const clients = new Set(); // Set to store connections
 
-
+// Express App Setup
 const app = express();
 
 app.use(cors({
@@ -23,21 +33,24 @@ app.use(express.urlencoded({ extended: true }));
 initRoutes(app);
 ConnectDB();
 
+// Starting the Server
 const port = process.env.PORT || 2025;
 const server = app.listen(port, () => {
     console.log(`Server is running on port ${server.address().port}.....`);
 });
 
+
+// WebSocket Client Connection Handling
 wss.on('connection', (ws) => {
-    // Thêm kết nối mới vào tập hợp clients
     clients.add(ws);
     console.log('Client connected');
 
-    // Lắng nghe tin nhắn từ client
+    // Handling messages from WebSocket clients
     ws.on('message', (message) => {
         try {
-            const _message = JSON.parse(message)
-            console.log(_message)
+            const _message = JSON.parse(message);
+            console.log(_message);
+
             switch (_message.sender) {
                 case "react":
                     switch (_message.type) {
@@ -68,13 +81,13 @@ wss.on('connection', (ws) => {
                     break;
             }
         } catch (error) {
-            console.log(error)
+            console.error("Error processing message: ", error);
         }
     });
 
-    // Khi client đóng kết nối
+    // Handle WebSocket client disconnection
     ws.on('close', () => {
         console.log('Client disconnected');
-        clients.delete(ws); // Xóa kết nối khỏi tập hợp clients
+        clients.delete(ws);
     });
 });

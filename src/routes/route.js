@@ -4,6 +4,7 @@ import * as userController from "../controllers/userControllers"
 import * as cardController from "../controllers/cardControllers"
 import * as historyController from "../controllers/historyControllers"
 import * as billController from "../controllers/billController"
+import * as notificationController from "../controllers/notificationController"
 
 const router = express.Router()
 
@@ -32,5 +33,8 @@ router.post('/bill/pay', billController.payBillController)
 // history route
 router.get('/history', historyController.getHistoryController)
 router.post('/history/id', historyController.getHistoryByIdController)
+
+// notification
+router.post('/notification', notificationController.notificationController)
 
 export default router
