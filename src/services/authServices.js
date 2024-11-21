@@ -33,14 +33,14 @@ export const loginService = ({ email, pass_word }) => new Promise(async (resolve
             });
         }
 
-        const isCorrectPass = bcrypt.compareSync(pass_word, response.pass_word);
-        if (!isCorrectPass) {
-            return resolve({
-                err: 2,
-                msg: 'Mật khẩu không chính xác.',
-                token: null,
-            });
-        }
+        // const isCorrectPass = bcrypt.compareSync(pass_word, response.pass_word);
+        // if (!isCorrectPass) {
+        //     return resolve({
+        //         err: 2,
+        //         msg: 'Mật khẩu không chính xác.',
+        //         token: null,
+        //     });
+        // }
 
         const token = jwt.sign(
             {

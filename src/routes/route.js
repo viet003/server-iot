@@ -13,6 +13,7 @@ router.post('/auth', authController.checkTokenExpiredController)
 router.post('/auth/login', authController.loginController)
 router.post('/auth/register', authController.registerController)
 router.post('/auth/changepass', authController.changePassWordController)
+router.post('/auth/dvtoken', authController.updateTokenDeviceController)
 
 // user route
 router.get('/user', userController.getAllUsersController)

@@ -105,11 +105,11 @@ export const checkTokenExpiredController = async (req, res) => {
 
 // update token device
 export const updateTokenDeviceController = async (req, res) => {
-    const { token } = req.body;
+    const { token, email } = req.body;
 
     try {
         // Kiểm tra xem token có tồn tại không
-        if (!token) {
+        if (!token || !email) {
             return res.status(400).json({
                 err: 1,
                 msg: "Thiếu dữ liệu đầu vào!"
