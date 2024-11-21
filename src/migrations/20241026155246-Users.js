@@ -34,6 +34,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      token_device: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

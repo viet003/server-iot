@@ -24,28 +24,34 @@ export const getBillService = async ({ card_id }) => {
 
 export const updateBill = async (card_id) => {
     try {
+        const LIMIT = 99000; // Giới hạn tối đa
+        const INCREMENT = 3000; // Giá trị tăng thêm
+
         // Kiểm tra và tạo Bill nếu chưa tồn tại
         const [bill, created] = await db.Bill.findOrCreate({
             where: { card_id },
-            defaults: { total: 0 }
+            defaults: { total: INCREMENT } // Đặt total thành 3000 khi tạo mới
         });
 
-        // Cập nhật Bill với dữ liệu mới
-        if (!created) {
-            const newTotal = bill.total + 3000;
-            await bill.update({ total: newTotal });
-        } else {
-            await bill.update({ total: 3000 });
+        // Nếu bill đã tồn tại và vượt quá hoặc bằng giới hạn, trả về false
+        if (!created && bill.total >= LIMIT) {
+            return false;
         }
 
-        return {
-            err: created ? 0 : 2,
-            msg: created ? 'Bill mới được tạo và cập nhật!' : 'Bill đã tồn tại và được cập nhật!'
-        };
+        // Nếu bill đã tồn tại, tăng `total` thêm giá trị `INCREMENT`
+        if (!created) {
+            const newTotal = bill.total + INCREMENT;
+            await bill.update({ total: Math.min(newTotal, LIMIT) });
+        }
+
+        // Trả về true khi cập nhật thành công
+        return true;
     } catch (error) {
-        throw error;
+        console.error("Lỗi khi cập nhật hóa đơn:", error.message);
+        throw new Error(`Lỗi khi cập nhật hóa đơn cho card_id ${card_id}: ${error.message}`);
     }
 };
+
 
 export const payBillService = async ({ card_id }) => {
     try {

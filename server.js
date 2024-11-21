@@ -6,9 +6,9 @@ import ConnectDB from "./src/config/connectDB";
 import * as wsControllers from "./src/controllers/wsControllers";
 var admin = require("firebase-admin");
 
-// Firebase Admin SDK Initialization
 dotenv.config();
 
+// Firebase Admin SDK Initialization
 var serviceAccount = require("./iot-messing-firebase-adminsdk-gzx1d-bfa7c735b7.json");
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -66,22 +66,25 @@ wss.on('connection', (ws) => {
                     break;
                 case "esp8266":
                     switch (_message.type) {
-                        case "cmd":
-                            wsControllers.sendToOther(clients, ws, _message);
+                        case "cmd_in":
+                            wsControllers.handleCmdIn(clients, ws, _message?.body?.id);
                             break;
-                        case "check":
-                            wsControllers.checkLastController(clients, ws, _message?.body?.id);
+                        case "cmd_out":
+                            wsControllers.handleCmdOut(clients, ws,  _message?.body?.id);
+                            break;
+                        case "cmd_close":
+                            wsControllers.handleCmdClose(clients);
                             break;
                         default:
                             break;
                     }
                     break;
                 default:
-                    console.log("Received message from an unknown sender");
+                    console.log("Không biết người gửi.");
                     break;
             }
         } catch (error) {
-            console.error("Error processing message: ", error);
+            console.error("Lỗi xử lý: ", error);
         }
     });
 

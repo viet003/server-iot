@@ -23,63 +23,143 @@ export const getDataController = async (clients, client) => {
     }
 }
 
-export const checkLastController = async (clients, client, id) => {
+export const handleCmdIn = async (clients, client, id) => {
     try {
-        const rs = await cardService.checkCardService(id);
-        if (rs) {
-            const res = await historyService.getLatestHistoryByCardId(id);
-            if (!res) {
-                await historyService.createHistory(id, 0);
-            } else {
-                if (res?.Card?.type === "1" && res?.status === "0") {
-                    sendToOther(clients, client, {
-                        sender: "esp8266",
-                        type: "cmd",
-                        body: {
-                            err: 0,
-                            id: id,
-                            status: 0,
-                        }
-                    })
-                    return;
-                } else {
-                    await historyService.createHistory(id, res?.status === 0 ? 1 : 0);
-                    if(res?.status === 0) {
-                        await billService.updateBill(id);
-                    }
-                }
-            }
-            sendBack(clients, client, {
-                sender: "esp8266",
-                type: "cmd",
-                body: {
-                    err: 0,
-                    status: 0,
-                }
-            })
-            sendToOther(clients, client, {
-                sender: "esp8266",
-                type: "success",
-                body: {
-                    err: 0,
-                    msg: "Thành công!"
-                }
-            })
-        } else {
-            sendToAll(clients, client, {
-                sender: "esp8266",
+        // Kiểm tra xem thẻ có tồn tại không
+        const cardExists = await handleCheckCard(id);
+        if (!cardExists) {
+            sendToAll(clients, {
+                sender: "server",
                 type: "warn",
                 body: {
                     err: 2,
                     msg: "Thẻ không tồn tại!"
                 }
             });
+            return;
+        }
+
+        // Lấy lịch sử mới nhất của thẻ
+        const res = await historyService.getLatestHistoryByCardId(id);
+        if (!res || res.status === 1) {
+            // Nếu không có lịch sử hoặc trạng thái là 'đã ra', tạo lịch sử mới (status = 0)
+            await historyService.createHistory(id, 0);
+            sendToAll(clients, {
+                sender: "esp8266",
+                type: "cmd",
+                body: {
+                    status: 0 // Trạng thái mới được tạo
+                }
+            });
+        } else {
+            // Nếu thẻ đang ở trạng thái "trong", gửi cảnh báo
+            sendToOther(clients, client, {
+                sender: "server",
+                type: "warn",
+                body: {
+                    err: 2,
+                    msg: `Trạng thái hiện tại là ${res.status}. Không thể sử dụng thẻ!`
+                }
+            });
         }
     } catch (error) {
-        console.log(error);
-        return 
+        console.error("Lỗi trong quá trình xử lý vào cổng:", error);
+        sendToAll(clients, {
+            sender: "server",
+            type: "error",
+            body: {
+                err: 1,
+                msg: "Lỗi hệ thống! Vui lòng thử lại sau."
+            }
+        });
+    }
+};
+
+
+export const handleCmdOut = async (clients, client, id) => {
+    try {
+        // Kiểm tra thẻ có tồn tại không
+        const cardExists = await handleCheckCard(id);
+        if (!cardExists) {
+            sendToAll(clients, {
+                sender: "server",
+                type: "warn",
+                body: {
+                    err: 2,
+                    msg: "Thẻ không tồn tại!"
+                }
+            });
+            return; 
+        }
+        const res = await historyService.getLatestHistoryByCardId(id);
+        // Nếu trạng thái là "đang ở trong" (status = 0), xử lý ra cổng
+        if (res?.status === 0) {
+            // Tạo lịch sử mới với trạng thái ra ngoài (status = 1)
+            await historyService.createHistory(id, 1);
+
+            // Cập nhật hóa đơn
+            const checkBill = await billService.updateBill(id);
+
+            if (!checkBill) {
+                // Nếu không thể cập nhật hóa đơn do vượt hạn mức
+                sendToOther(clients, client, {
+                    sender: "server",
+                    type: "warn",
+                    body: {
+                        err: 2,
+                        msg: "Thẻ đã đạt hạn mức dư nợ!"
+                    }
+                });
+                return;
+            }
+        } else {
+            // Nếu trạng thái không phải là "đang ở trong"
+            sendToOther(clients, client, {
+                sender: "server",
+                type: "warn",
+                body: {
+                    err: 2,
+                    msg: "Trạng thái đang ở ngoài. Không thể sử dụng thẻ!"
+                }
+            });
+        }
+    } catch (error) {
+        // Xử lý lỗi toàn cục
+        console.error("Lỗi trong quá trình xử lý ra cổng:", error.message);
+        sendToAll(clients, {
+            sender: "server",
+            type: "error",
+            body: {
+                err: 1,
+                msg: "Lỗi hệ thống! Vui lòng thử lại sau."
+            }
+        });
+    }
+};
+
+
+// xử lý đóng cổng
+export const handleCmdClose = async (clients) => {
+    sendToAll(clients, {
+        sender: "esp8266",
+        type: "cmd",
+        body: {
+            status: 1,
+        }
+    });
+}
+
+// kiểm tra thẻ
+export const handleCheckCard = async (id) => {
+    try {
+        const rs = await cardService.checkCardService(id);
+        return rs ? true : false;
+    } catch (error) {
+        console.log(error)
+        throw (error)
     }
 }
+
 
 // gửi message cho client khác
 export const sendToOther = (clients, client, data) => {
@@ -100,7 +180,7 @@ export const sendBack = (clients, client, data) => {
 }
 
 // gửi message cho tất cả client
-export const sendToAll = (clients, client, data) => {
+export const sendToAll = (clients, data) => {
     clients.forEach((_client) => {
         if (_client.readyState === WebSocket.OPEN) {
             _client.send(JSON.stringify(data));

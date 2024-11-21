@@ -39,7 +39,7 @@ export const getAllHistoriesService = () => new Promise(async (resolve, reject) 
 });
 
 // lay ra lich su theo card
-export const getAllHistorieByIdService = ({ card_id}) => new Promise(async (resolve, reject) => {
+export const getAllHistorieByIdService = ({ card_id }) => new Promise(async (resolve, reject) => {
     try {
         const response = await db.History.findAll({
             where: { card_id }
@@ -60,10 +60,10 @@ export const getAllHistorieByIdService = ({ card_id}) => new Promise(async (reso
 });
 
 // Tạo một bản ghi mới trong bảng History
-export const createHistory = async (cardId, status) => {
+export const createHistory = async (card_id, status) => {
     try {
         const response = await db.History.create({
-            cardId: cardId,
+            card_id: card_id,
             status: status,
             time: new Date() // Lấy thời gian hiện tại để lưu vào cột `time`
         });
@@ -71,16 +71,16 @@ export const createHistory = async (cardId, status) => {
         return response;
     } catch (error) {
         console.error("Lỗi tạo lịch sử:", error);
-        throw(error)
+        throw (error)
     }
 };
 
 
-// Lấy bản ghi gần nhất theo cardId từ bảng History
-export const getLatestHistoryWithCardType = async (cardId) => {
+// Lấy bản ghi gần nhất theo card_id từ bảng History
+export const getLatestHistoryWithCardType = async (card_id) => {
     try {
         const response = await db.History.findOne({
-            where: { cardId },
+            where: { card_id },
             order: [['time', 'DESC']], // Sắp xếp theo time giảm dần để lấy bản ghi mới nhất
             include: [
                 {

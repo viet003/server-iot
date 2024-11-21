@@ -20,3 +20,22 @@ export const notificationController = async (req, res) => {
     res.status(500).send('Error sending notification');
   });
 }
+
+// send notification controller
+export const sendNotificationController = async (token, title, body) => {
+  const message = {
+    notification: {
+      title: title,
+      body: body,
+    },
+    token: token,
+  };
+
+  getMessaging().send(message).then((response) => {
+    console.log('Successfully sent message:', response);
+    return true;
+  }).catch((error) => {
+    console.error('Error sending message:', error);
+    return false;
+  });
+}

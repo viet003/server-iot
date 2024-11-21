@@ -123,10 +123,10 @@ export const changePassWordService = ({ type, pass_word, old_pass_word, email })
             switch (type) {
                 case 2:
                     const response = await db.User.update(
-                    { pass_word: hash(pass_word) },
-                    {
-                        where: { email },
-                    }) 
+                        { pass_word: hash(pass_word) },
+                        {
+                            where: { email },
+                        })
                     resolve({
                         err: response[0] ? 0 : 2,
                         msg: response[0] ? 'Đổi mật khẩu thành công thành công!' : 'Không tìm thấy thông tin để cập nhật.',
@@ -145,3 +145,31 @@ export const changePassWordService = ({ type, pass_word, old_pass_word, email })
             });
         }
     });
+
+// update token_device
+export const updateTokenDeviceService = async ({ token, email }) => {
+    try {
+        const user = await db.User.findOne({ where: { email } });
+
+        if (!user) {
+            return {
+                err: 2,
+                msg: 'Không tìm thấy người dùng với email này.',
+            };
+        }
+        const result = await user.update({ token_device: token });
+
+        // Trả về kết quả cập nhật
+        return {
+            err: result ? 0 : 2,
+            msg: result ? 'Thành công!' : 'Không thành công!',
+        };
+    } catch (error) {
+        // Xử lý lỗi và trả về thông báo lỗi
+        return {
+            err: 2,
+            msg: 'Lỗi khi cập nhật token thiết bị.',
+            error: error.message,
+        };
+    }
+};

@@ -9,6 +9,7 @@ import * as notificationController from "../controllers/notificationController"
 const router = express.Router()
 
 // auth route
+router.post('/auth', authController.checkTokenExpiredController)
 router.post('/auth/login', authController.loginController)
 router.post('/auth/register', authController.registerController)
 router.post('/auth/changepass', authController.changePassWordController)
