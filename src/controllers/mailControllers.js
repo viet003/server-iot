@@ -90,7 +90,7 @@ export const sendMail = ({ email }) => new Promise(async (resolve, reject) => {
         transporter.sendMail(mailOptions, (error, info) => {
             resolve({
                 err: error ? 2 : 0,
-                msg: error ? `Không thể gửi thông tin đến ${email}` : `Mật khẩu mới đã được gửi đến ${email}. Vui lòng kiểm tra email của bạn.`
+                msg: error ? `Không thể gửi thông tin đến ${email}` : `Thông tin đã được gửi đến ${email}. Vui lòng kiểm tra email của bạn.`
             })
         });
     } catch (error) {

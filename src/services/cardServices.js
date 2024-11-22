@@ -69,7 +69,6 @@ export const checkCardService = async (id) => {
         const response = await db.Card.findOne({
             where: { id }
         });
-
         return response;
     } catch (error) {
         throw error;

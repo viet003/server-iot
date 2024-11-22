@@ -67,6 +67,7 @@ wss.on('connection', (ws) => {
                 case "esp8266":
                     switch (_message.type) {
                         case "cmd_in":
+                            console.log(_message?.body?.id)
                             wsControllers.handleCmdIn(clients, ws, _message?.body?.id);
                             break;
                         case "cmd_out":

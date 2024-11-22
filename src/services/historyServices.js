@@ -85,6 +85,7 @@ export const getLatestHistoryWithCardType = async (card_id) => {
             include: [
                 {
                     model: db.Card,
+                    as: 'card',
                     attributes: ['type'], // Chỉ lấy trường type từ bảng Card
                 }
             ]

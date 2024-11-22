@@ -40,7 +40,7 @@ export const handleCmdIn = async (clients, client, id) => {
         }
 
         // Lấy lịch sử mới nhất của thẻ
-        const res = await historyService.getLatestHistoryByCardId(id);
+        const res = await historyService.getLatestHistoryWithCardType(id);
         if (!res || res.status === 1) {
             // Nếu không có lịch sử hoặc trạng thái là 'đã ra', tạo lịch sử mới (status = 0)
             await historyService.createHistory(id, 0);
@@ -58,7 +58,7 @@ export const handleCmdIn = async (clients, client, id) => {
                 type: "warn",
                 body: {
                     err: 2,
-                    msg: `Trạng thái hiện tại là ${res.status}. Không thể sử dụng thẻ!`
+                    msg: `Trạng thái hiện tại đang ở trong. Không thể sử dụng thẻ!`
                 }
             });
         }
@@ -89,9 +89,9 @@ export const handleCmdOut = async (clients, client, id) => {
                     msg: "Thẻ không tồn tại!"
                 }
             });
-            return; 
+            return;
         }
-        const res = await historyService.getLatestHistoryByCardId(id);
+        const res = await historyService.getLatestHistoryWithCardType(id);
         // Nếu trạng thái là "đang ở trong" (status = 0), xử lý ra cổng
         if (res?.status === 0) {
             // Tạo lịch sử mới với trạng thái ra ngoài (status = 1)
@@ -110,8 +110,15 @@ export const handleCmdOut = async (clients, client, id) => {
                         msg: "Thẻ đã đạt hạn mức dư nợ!"
                     }
                 });
-                return;
             }
+
+            sendToAll(clients, {
+                sender: "esp8266",
+                type: "cmd",
+                body: {
+                    status: 0 // Trạng thái mới được tạo
+                }
+            });
         } else {
             // Nếu trạng thái không phải là "đang ở trong"
             sendToOther(clients, client, {
