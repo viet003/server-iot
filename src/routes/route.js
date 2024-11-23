@@ -30,6 +30,7 @@ router.post('/card/delete', cardController.deleteCardController)
 
 // bill route
 router.post('/bill', billController.getBillController)
+router.get('/bill/all', billController.getAllBillController)
 router.post('/bill/pay', billController.payBillController)
 
 // history route

@@ -119,7 +119,7 @@ export const handleCmdOut = async (clients, client, id) => {
                     status: 0 // Trạng thái mới được tạo
                 }
             });
-        } else {
+        } else {        
             // Nếu trạng thái không phải là "đang ở trong"
             sendToOther(clients, client, {
                 sender: "server",

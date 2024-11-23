@@ -41,15 +41,23 @@ const server = app.listen(port, () => {
 
 
 // WebSocket Client Connection Handling
+
+let isStopHandling = false;
+
 wss.on('connection', (ws) => {
     clients.add(ws);
     console.log('Client connected');
 
-    // Handling messages from WebSocket clients
     ws.on('message', (message) => {
         try {
+            
             const _message = JSON.parse(message);
             console.log(_message);
+            
+            if (isStopHandling && _message.sender === 'esp8266') {
+                console.log('Tạm dừng xử lý thông điệp từ Esp8266:', _message);
+                return;
+            }
 
             switch (_message.sender) {
                 case "react":
@@ -61,37 +69,53 @@ wss.on('connection', (ws) => {
                             wsControllers.sendToOther(clients, ws, _message);
                             break;
                         default:
+                            console.log("Unknown React message type:", _message.type);
                             break;
                     }
                     break;
                 case "esp8266":
+                    stopHandlingMessage();
                     switch (_message.type) {
                         case "cmd_in":
-                            console.log(_message?.body?.id)
+                            console.log("Xứ lý vào với Card ID:", _message?.body?.id);
                             wsControllers.handleCmdIn(clients, ws, _message?.body?.id);
                             break;
                         case "cmd_out":
-                            wsControllers.handleCmdOut(clients, ws,  _message?.body?.id);
+                            console.log("Xứ lý ra với Card ID:", _message?.body?.id);
+                            wsControllers.handleCmdOut(clients, ws, _message?.body?.id);
                             break;
                         case "cmd_close":
+                            console.log("Xứ lý đóng cổng");
                             wsControllers.handleCmdClose(clients);
                             break;
                         default:
+                            console.log("Không hiểu kiểu yêu cầu xử lý:", _message.type);
                             break;
                     }
                     break;
                 default:
-                    console.log("Không biết người gửi.");
+                    console.log("Unknown sender:", _message.sender);
                     break;
             }
         } catch (error) {
-            console.error("Lỗi xử lý: ", error);
+            console.error("Không thể xử lý:", error);
         }
     });
 
-    // Handle WebSocket client disconnection
     ws.on('close', () => {
-        console.log('Client disconnected');
         clients.delete(ws);
+        console.log('Client disconnected');
     });
 });
+
+
+// stop handling
+const stopHandlingMessage = (duration = 5000) => {
+    if (isStopHandling) return; // back nếu đa đã dừng xử lý
+    isStopHandling = true;
+    console.log('Message handling paused');
+    setTimeout(() => {
+        isStopHandling = false;
+        console.log('Message handling resumed');
+    }, duration);
+};

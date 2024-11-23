@@ -1,5 +1,16 @@
 import * as billService from "../services/billServices"
 
+// lấy tất cả bill
+export const getAllBillController = async (req, res) => {
+    try {
+        const rs = await billService.getAllBillService()
+        return res.status(200).json(rs)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(error)
+    }
+}
+
 // lấy bill
 export const getBillController = async (req, res) => {
     const { card_id } = req.body;

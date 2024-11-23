@@ -1,6 +1,25 @@
 import db from "../models";
 import * as mailControllers from "../controllers/mailControllers"
 
+export const getAllBillService = async () => {
+    try {
+        const rs = await db.Bill.findAll();
+
+        return {
+            err: rs.length > 0 ? 0 : 2, 
+            msg: rs.length > 0 ? 'Lấy thông tin Bill thành công.' : "Không có thông dữ liệu.",
+            data: rs 
+        };
+    } catch (error) {
+        console.error('Lỗi khi lấy Bill:', error.message);
+        return {
+            err: 2, 
+            msg: `Không thể lấy Bill: ${error.message}`
+        };
+    }
+};
+
+
 export const getBillService = async ({ card_id }) => {
     try {
         const bill = await db.Bill.findOne({
@@ -53,15 +72,15 @@ export const updateBill = async (card_id) => {
 };
 
 
-export const payBillService = async ({ card_id }) => {
+export const payBillService = async ({ card_id, total = 0 }) => {
     try {
         const [bill, created] = await db.Bill.findOrCreate({
             where: { card_id },
-            defaults: { total: 0 }
+            defaults: { total: total }
         });
 
         if (!created) {
-            await bill.update({ total: 0 });
+            await bill.update({ total: total });
         }
 
         return {
