@@ -50,10 +50,10 @@ wss.on('connection', (ws) => {
 
     ws.on('message', (message) => {
         try {
-            
+
             const _message = JSON.parse(message);
             console.log(_message);
-            
+
             if (isStopHandling && _message.sender === 'esp8266') {
                 console.log('Tạm dừng xử lý thông điệp từ Esp8266:', _message);
                 return;
@@ -67,6 +67,12 @@ wss.on('connection', (ws) => {
                             break;
                         case "cmd":
                             wsControllers.sendToOther(clients, ws, _message);
+                            break;
+                        case "info":
+                            if (_message?.body?.card_id && _message?.body?.card_id !== "") {
+                                wsControllers.handleGuestExit(clients, _message?.body?.card_id);
+                                return;
+                            }
                             break;
                         default:
                             console.log("Unknown React message type:", _message.type);

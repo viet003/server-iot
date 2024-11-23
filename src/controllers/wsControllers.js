@@ -108,9 +108,20 @@ export const handleCmdOut = async (clients, client, id) => {
         }
         const res = await historyService.getLatestHistoryWithCardType(id);
         // Nếu trạng thái là "đang ở trong" (status = 0), xử lý ra cổng
-        if (res?.status === 0) {
-            // Tạo lịch sử mới với trạng thái ra ngoài (status = 1)
+        if (res?.card?.type === 1) {
+            sendToOther(clients, client, {
+                sender: "esp8266",
+                type: "info",
+                body: {
+                    err: 2,
+                    car_id: id,
+                    msg: "Vui lòng mở cửa cho khách!"
+                }
+            });
+            return;
+        }
 
+        if (res?.status === 0) {
             // Cập nhật hóa đơn
             const checkBill = await billService.updateBill(id, 1);
 
@@ -126,6 +137,7 @@ export const handleCmdOut = async (clients, client, id) => {
                 });
                 return;
             }
+
             await historyService.createHistory(id, 1);
 
             sendToAll(clients, {
@@ -160,6 +172,17 @@ export const handleCmdOut = async (clients, client, id) => {
     }
 };
 
+// xử lý đóng cổng
+export const handleGuestExit = async (clients, card_id) => {
+    await historyService.createHistory(card_id, 1);
+    sendToAll(clients, {
+        sender: "react",
+        type: "cmd",
+        body: {
+            status: 0,
+        }
+    });
+}
 
 // xử lý đóng cổng
 export const handleCmdClose = async (clients) => {
