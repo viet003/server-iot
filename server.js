@@ -110,7 +110,7 @@ wss.on('connection', (ws) => {
 
 
 // stop handling
-const stopHandlingMessage = (duration = 5000) => {
+const stopHandlingMessage = (duration = 2000) => {
     if (isStopHandling) return; // back nếu đa đã dừng xử lý
     isStopHandling = true;
     console.log('Message handling paused');

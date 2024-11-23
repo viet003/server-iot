@@ -1,7 +1,7 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 
-export const sendMail = ({ email }) => new Promise(async (resolve, reject) => {
+export const sendMail = (email) => new Promise(async (resolve, reject) => {
     try {
         let transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com', // Host của Gmail
@@ -73,7 +73,7 @@ export const sendMail = ({ email }) => new Promise(async (resolve, reject) => {
                 <body>
                     <div class="container">
                         <h1>Thông báo về số dư thẻ ra vào cổng</h1>
-                        <p>Hiện tại dư nợ trong thẻ ra vào cổng của bạn sắp đạt đến giới hạn. Vui lòng thanh toán để tiếp tục sử dụng dịch vụ.</p>
+                        <p>Hiện tại dư nợ trong thẻ ra vào cổng của bạn đã đạt đến giới hạn. Vui lòng thanh toán để tiếp tục sử dụng dịch vụ.</p>
                         <p>Xin chân thành cảm ơn!</p>
                         <div class="bottom-bar">
                             <p>Nếu có bất kỳ câu hỏi hoặc thắc mắc, vui lòng liên hệ với chúng tôi:</p>

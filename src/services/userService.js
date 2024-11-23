@@ -37,6 +37,28 @@ export const getUserByIdService = ({ id }) => new Promise(async (resolve, reject
 });
 
 
+export const getUserByCardIdService = (card_id) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        // Tìm tài khoản theo card_id
+        const response = await db.User.findOne({
+          where: { card_id },
+        });
+  
+        if (response) {
+          // Trả về dữ liệu nếu tìm thấy
+          resolve(response.dataValues); // `dataValues` chứa dữ liệu thực của đối tượng
+        } else {
+          // Trả về thông báo nếu không tìm thấy tài khoản
+          resolve(null); // Hoặc tùy chỉnh: resolve({ error: "Không tìm thấy tài khoản" })
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy tài khoản theo card_id:", error);
+        reject(error); // Trả về lỗi để xử lý ở nơi gọi hàm
+      }
+    });
+  
+
 // sửa
 export const updateUserService = ({ id, user_name, vehicle_type, type }) =>
     new Promise(async (resolve, reject) => {

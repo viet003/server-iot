@@ -39,6 +39,21 @@ export const handleCmdIn = async (clients, client, id) => {
             return;
         }
 
+        const checkBill = await billService.updateBill(id, 0);
+
+        if (!checkBill) {
+            // Nếu không thể cập nhật hóa đơn do vượt hạn mức
+            sendToOther(clients, client, {
+                sender: "server",
+                type: "warn",
+                body: {
+                    err: 2,
+                    msg: "Thẻ đã đạt hạn mức dư nợ!"
+                }
+            });
+            return;
+        }
+
         // Lấy lịch sử mới nhất của thẻ
         const res = await historyService.getLatestHistoryWithCardType(id);
         if (!res || res.status === 1) {
@@ -95,10 +110,9 @@ export const handleCmdOut = async (clients, client, id) => {
         // Nếu trạng thái là "đang ở trong" (status = 0), xử lý ra cổng
         if (res?.status === 0) {
             // Tạo lịch sử mới với trạng thái ra ngoài (status = 1)
-            await historyService.createHistory(id, 1);
 
             // Cập nhật hóa đơn
-            const checkBill = await billService.updateBill(id);
+            const checkBill = await billService.updateBill(id, 1);
 
             if (!checkBill) {
                 // Nếu không thể cập nhật hóa đơn do vượt hạn mức
@@ -110,7 +124,9 @@ export const handleCmdOut = async (clients, client, id) => {
                         msg: "Thẻ đã đạt hạn mức dư nợ!"
                     }
                 });
+                return;
             }
+            await historyService.createHistory(id, 1);
 
             sendToAll(clients, {
                 sender: "esp8266",
@@ -119,7 +135,7 @@ export const handleCmdOut = async (clients, client, id) => {
                     status: 0 // Trạng thái mới được tạo
                 }
             });
-        } else {        
+        } else {
             // Nếu trạng thái không phải là "đang ở trong"
             sendToOther(clients, client, {
                 sender: "server",
